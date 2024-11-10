@@ -24,7 +24,8 @@ class RegularPolygon(ScadWidget, PolygonMixin):
                  outer_diameter: float | None = None,
                  inner_radius: float | None = None,
                  inner_diameter: float | None = None,
-                 side_length: float | None = None):
+                 side_length: float | None = None,
+                 delta: float | None = None):
         """
         Object constructor.
 
@@ -32,9 +33,11 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         :param outer_radius: The outer radius (a.k.a. circumradius) of the regular polygon.
         :param inner_radius: The inner radius (a.k.a. apothem) of the regular polygon.
         :param side_length: The length of a side of the regular polygon.
+        :param delta: The minimum distance between nodes, vertices and line segments for reliable computation of the
+                      separation between line segments and nodes.
         """
         ScadWidget.__init__(self, args=locals())
-        PolygonMixin.__init__(self)
+        PolygonMixin.__init__(self, delta=delta)
 
         self._angles: List[float] = []
         """

@@ -16,15 +16,17 @@ class SmoothPolygonMixin(PolygonMixin, ABC):
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
                  *,
-                 profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = None):
+                 profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = None,
+                 delta: float | None = None):
         """
         Object constructor.
 
         :param profile_factories: The profile factories to be applied at nodes of the polygon. When a single profile
                                   factory is given, this profile will be applied at all nodes.
-
+        :param delta: The minimum distance between nodes, vertices and line segments for reliable computation of the
+                      separation between line segments and nodes.
         """
-        PolygonMixin.__init__(self)
+        PolygonMixin.__init__(self, delta=delta)
 
         self._profile_factories = profile_factories
 
@@ -50,9 +52,11 @@ class SmoothPolygonMixin(PolygonMixin, ABC):
 
         :param context: The build context.
         """
+        context = Context()
+
         nodes = self.nodes
-        inner_angles = self.inner_angles
-        normal_angles = self.normal_angles
+        inner_angles = self.inner_angles(context)
+        normal_angles = self.normal_angles(context)
         profile_factories = self.profile_factories
 
         polygon = self.build_polygon(context=context)

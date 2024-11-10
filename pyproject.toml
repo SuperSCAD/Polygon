@@ -22,7 +22,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.10.0"
-super-scad = "^0.8.4"
+super-scad = "^0.9.1"
 super-scad-smooth-profile = "^0.3.1"
 
 [tool.poetry.group.dev.dependencies]

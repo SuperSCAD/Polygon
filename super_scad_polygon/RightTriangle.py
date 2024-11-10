@@ -18,7 +18,8 @@ class RightTriangle(ScadWidget, PolygonMixin):
                  *,
                  width: float,
                  depth: float,
-                 convexity: int | None = None):
+                 convexity: int | None = None,
+                 delta: float | None = None):
         """
         Object constructor.
 
@@ -26,9 +27,11 @@ class RightTriangle(ScadWidget, PolygonMixin):
         :param depth: The depth of the right triangle.
         :param convexity: Number of "inward" curves, i.e., expected number of path crossings of an arbitrary line
                           through the child widget.
+        :param delta: The minimum distance between nodes, vertices and line segments for reliable computation of the
+                      separation between line segments and nodes.
         """
         ScadWidget.__init__(self, args=locals())
-        PolygonMixin.__init__(self)
+        PolygonMixin.__init__(self, delta=delta)
 
         self._validate_arguments()
 

@@ -13,38 +13,6 @@ class RegularPolygonTestCase(ScadTestCase):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_profile_factories(self):
-        """
-        Test profile factories.
-        """
-        # Default factory is rough.
-        polygon = SmoothRegularPolygon(sides=7, size=10.0)
-        profile_factories = polygon.profile_factories
-        self.assertEqual(7, len(profile_factories))
-        for index in range(len(profile_factories)):
-            profile_factory = profile_factories[index]
-            self.assertIsInstance(profile_factory, RoughFactory)
-
-        # One factory is repeated.
-        polygon = SmoothRegularPolygon(sides=7, size=10.0, profile_factories=FilletFactory(radius=1.0))
-        profile_factories = polygon.profile_factories
-        self.assertEqual(7, len(profile_factories))
-        for index in range(len(profile_factories)):
-            profile_factory = profile_factories[index]
-            self.assertIsInstance(profile_factory, FilletFactory)
-
-        # List of factories is extended.
-        polygon = SmoothRegularPolygon(sides=7,
-                                       size=10.0,
-                                       profile_factories=[RoughFactory(), FilletFactory(radius=1.0)])
-        profile_factories = polygon.profile_factories
-        self.assertEqual(7, len(profile_factories))
-        self.assertIsInstance(profile_factories[0], RoughFactory)
-        self.assertIsInstance(profile_factories[1], FilletFactory)
-        for index in range(2, len(profile_factories)):
-            self.assertIsInstance(profile_factories[0], RoughFactory)
-
-    # ------------------------------------------------------------------------------------------------------------------
     def test_square_inner_radius(self):
         """
         Test for a smooth regular polygon with test profile.

@@ -5,6 +5,7 @@
 /bin/phing
 /bin/yaml-lint
 /composer.lock
+/demo.scad
 /dist/
 /poetry.lock
 /run_super_scad.py

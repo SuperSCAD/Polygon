@@ -1,28 +1,36 @@
 from typing import List
 
+from super_scad.d2.Polygon import Polygon
+from super_scad.type import Vector2
 from super_scad_smooth_profile.SmoothProfileFactory import SmoothProfileFactory
 
-from super_scad_polygon.RightTriangle import RightTriangle
 from super_scad_polygon.SmoothPolygonMixin import SmoothPolygonMixin
 
 
-class SmoothRightTriangle(SmoothPolygonMixin, RightTriangle):
+class SmoothPolygon(SmoothPolygonMixin, Polygon):
     """
-    A widget for right triangles with smooth corners.
+    A widget for polygons with smooth corners.
     """
 
     # ----------------------------------------------------------------------------------------------------------------------
     def __init__(self,
                  *,
-                 width: float,
-                 depth: float,
+                 primary: List[Vector2] | None = None,
+                 points: List[Vector2] | None = None,
+                 secondary: List[Vector2] | None = None,
+                 secondaries: List[List[Vector2]] | None = None,
+                 convexity: int | None = None,
                  profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = None,
                  delta: float | None = None):
         """
         Object constructor.
 
-        :param width: The width of the right triangle.
-        :param depth: The depth of the right triangle.
+        :param primary: The list of 2D points of the polygon.
+        :param points: Alias for primary.
+        :param secondary: The secondary path that will be subtracted from the polygon.
+        :param secondaries: The secondary paths that will be subtracted form the polygon.
+        :param convexity: Number of "inward" curves, i.e., expected number of path crossings of an arbitrary line
+                          through the child widget.
         :param profile_factories: The profile factories to be applied at nodes of the right triangle. When a single
                                   profile factory is given, this profile will be applied at all nodes.
         :param delta: The minimum distance between nodes, vertices and line segments for reliable computation of the
@@ -31,8 +39,11 @@ class SmoothRightTriangle(SmoothPolygonMixin, RightTriangle):
         SmoothPolygonMixin.__init__(self,
                                     profile_factories=profile_factories,
                                     delta=delta)
-        RightTriangle.__init__(self,
-                               width=width,
-                               depth=depth)
+        Polygon.__init__(self,
+                         primary=primary,
+                         points=points,
+                         secondary=secondary,
+                         secondaries=secondaries,
+                         convexity=convexity)
 
 # ----------------------------------------------------------------------------------------------------------------------

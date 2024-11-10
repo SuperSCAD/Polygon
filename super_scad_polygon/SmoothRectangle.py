@@ -19,7 +19,8 @@ class SmoothRectangle(SmoothPolygonMixin, Rectangle):
                  width: float | None = None,
                  depth: float | None = None,
                  center: bool = False,
-                 profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = None):
+                 profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = None,
+                 delta: float | None = None):
         """
         Object constructor.
 
@@ -29,8 +30,12 @@ class SmoothRectangle(SmoothPolygonMixin, Rectangle):
         :param center: Whether the rectangle is centered at its position.
         :param profile_factories: The profile factories to be applied at nodes of the right triangle. When a single
                                   profile factory is given, this profile will be applied at all nodes.
+        :param delta: The minimum distance between nodes, vertices and line segments for reliable computation of the
+                      separation between line segments and nodes.
         """
-        SmoothPolygonMixin.__init__(self, profile_factories=profile_factories)
+        SmoothPolygonMixin.__init__(self,
+                                    profile_factories=profile_factories,
+                                    delta=delta)
         Rectangle.__init__(self,
                            size=size,
                            width=width,
