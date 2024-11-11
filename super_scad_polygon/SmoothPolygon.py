@@ -21,7 +21,7 @@ class SmoothPolygon(SmoothPolygonMixin, Polygon):
                  secondaries: List[List[Vector2]] | None = None,
                  convexity: int | None = None,
                  profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = None,
-                 extend_sides_by_eps: bool | Set[int] | None = None,
+                 extend_sides_by_eps: bool | List[bool] | Set[int] | None = None,
                  delta: float | None = None):
         """
         Object constructor.

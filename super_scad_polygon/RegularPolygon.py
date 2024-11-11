@@ -25,7 +25,7 @@ class RegularPolygon(ScadWidget, PolygonMixin):
                  inner_radius: float | None = None,
                  inner_diameter: float | None = None,
                  side_length: float | None = None,
-                 extend_sides_by_eps: bool | Set[int] | None = None,
+                 extend_sides_by_eps: bool | List[bool] | Set[int] | None = None,
                  delta: float | None = None):
         """
         Object constructor.

@@ -20,7 +20,7 @@ class SmoothRectangle(SmoothPolygonMixin, Rectangle):
                  depth: float | None = None,
                  center: bool = False,
                  profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = None,
-                 extend_sides_by_eps: bool | Set[int] | None = None):
+                 extend_sides_by_eps: bool | List[bool] | Set[int] | None = None):
         """
         Object constructor.
 
