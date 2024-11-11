@@ -14,21 +14,19 @@ class SmoothPolygonMixin(PolygonMixin, ABC):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self,
-                 *,
-                 profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = None,
-                 delta: float | None = None):
+    def __init__(self, *, profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None):
         """
         Object constructor.
 
         :param profile_factories: The profile factories to be applied at nodes of the polygon. When a single profile
                                   factory is given, this profile will be applied at all nodes.
-        :param delta: The minimum distance between nodes, vertices and line segments for reliable computation of the
-                      separation between line segments and nodes.
         """
-        PolygonMixin.__init__(self, delta=delta)
+        # PolygonMixin.__init__(self)
 
-        self._profile_factories = profile_factories
+        self._profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = profile_factories
+        """
+        The profile factories to be applied at nodes of the polygon.
+        """
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -52,14 +50,15 @@ class SmoothPolygonMixin(PolygonMixin, ABC):
 
         :param context: The build context.
         """
-        context = Context()
+        if self.extend_sides_by_eps():
+            polygon = self._build_polygon_extended(context=context)
+        else:
+            polygon = self._build_polygon(context=context)
 
         nodes = self.nodes
         inner_angles = self.inner_angles(context)
         normal_angles = self.normal_angles(context)
         profile_factories = self.profile_factories
-
-        polygon = self.build_polygon(context=context)
         for index in range(len(nodes)):
             profile = profile_factories[index]
             polygon = profile.create_smooth_profile(inner_angle=inner_angles[index],

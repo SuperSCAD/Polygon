@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Set
 
 from super_scad.d2.Polygon import Polygon
 from super_scad.d2.PolygonMixin import PolygonMixin
@@ -19,6 +19,7 @@ class RightTriangle(ScadWidget, PolygonMixin):
                  width: float,
                  depth: float,
                  convexity: int | None = None,
+                 extend_sides_by_eps: bool | Set[int] | None = None,
                  delta: float | None = None):
         """
         Object constructor.
@@ -27,11 +28,12 @@ class RightTriangle(ScadWidget, PolygonMixin):
         :param depth: The depth of the right triangle.
         :param convexity: Number of "inward" curves, i.e., expected number of path crossings of an arbitrary line
                           through the child widget.
+        :param extend_sides_by_eps: Whether to extend sides by eps for a clear overlap.
         :param delta: The minimum distance between nodes, vertices and line segments for reliable computation of the
                       separation between line segments and nodes.
         """
         ScadWidget.__init__(self, args=locals())
-        PolygonMixin.__init__(self, delta=delta)
+        PolygonMixin.__init__(self, extend_sides_by_eps=extend_sides_by_eps, delta=delta)
 
         self._validate_arguments()
 
@@ -76,21 +78,21 @@ class RightTriangle(ScadWidget, PolygonMixin):
         return self._args.get('convexity')
 
     # ------------------------------------------------------------------------------------------------------------------
-    def build_polygon(self, context: Context) -> ScadWidget:
-        """
-        Builds a SuperSCAD widget.
-
-        :param context: The build context.
-        """
-        return Polygon(primary=self.nodes, convexity=self.convexity)
-
-    # ------------------------------------------------------------------------------------------------------------------
     def build(self, context: Context) -> ScadWidget:
         """
         Builds a SuperSCAD widget.
 
         :param context: The build context.
         """
-        return self.build_polygon(context)
+        return self._build_polygon(context)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _build_polygon(self, context: Context) -> ScadWidget:
+        """
+        Builds a SuperSCAD widget.
+
+        :param context: The build context.
+        """
+        return Polygon(primary=self.nodes, convexity=self.convexity)
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -15,7 +15,7 @@ difference()
             {
                difference()
                {
-                  polygon(points = [[0.0, 0.01], [0.7171, -0.7071], [-0.7171, -0.7071]], convexity = 2);
+                  polygon(points = [[0.0, 0.0141], [0.7142, -0.7], [0.7071, -0.7071], [-0.7071, -0.7071], [-0.7142, -0.7]], convexity = 2);
                   translate(v = [0.0, -1.4142])
                   {
                      circle(d = 2.0, $fn = 64);
@@ -29,7 +29,7 @@ difference()
             {
                difference()
                {
-                  polygon(points = [[0.0, 0.01], [0.7171, -0.7071], [-0.7171, -0.7071]], convexity = 2);
+                  polygon(points = [[0.0, 0.0141], [0.7142, -0.7], [0.7071, -0.7071], [-0.7071, -0.7071], [-0.7142, -0.7]], convexity = 2);
                   translate(v = [0.0, -1.4142])
                   {
                      circle(d = 2.0, $fn = 64);
@@ -44,7 +44,7 @@ difference()
          {
             difference()
             {
-               polygon(points = [[0.0, 0.01], [0.7171, -0.7071], [-0.7171, -0.7071]], convexity = 2);
+               polygon(points = [[0.0, 0.0141], [0.7142, -0.7], [0.7071, -0.7071], [-0.7071, -0.7071], [-0.7142, -0.7]], convexity = 2);
                translate(v = [0.0, -1.4142])
                {
                   circle(d = 2.0, $fn = 64);
@@ -59,7 +59,7 @@ difference()
       {
          difference()
          {
-            polygon(points = [[0.0, 0.01], [0.7171, -0.7071], [-0.7171, -0.7071]], convexity = 2);
+            polygon(points = [[0.0, 0.0141], [0.7142, -0.7], [0.7071, -0.7071], [-0.7071, -0.7071], [-0.7142, -0.7]], convexity = 2);
             translate(v = [0.0, -1.4142])
             {
                circle(d = 2.0, $fn = 64);

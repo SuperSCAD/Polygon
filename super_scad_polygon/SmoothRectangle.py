@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Set
 
 from super_scad.d2.Rectangle import Rectangle
 from super_scad.type import Vector2
@@ -20,7 +20,7 @@ class SmoothRectangle(SmoothPolygonMixin, Rectangle):
                  depth: float | None = None,
                  center: bool = False,
                  profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = None,
-                 delta: float | None = None):
+                 extend_sides_by_eps: bool | Set[int] | None = None):
         """
         Object constructor.
 
@@ -30,16 +30,14 @@ class SmoothRectangle(SmoothPolygonMixin, Rectangle):
         :param center: Whether the rectangle is centered at its position.
         :param profile_factories: The profile factories to be applied at nodes of the right triangle. When a single
                                   profile factory is given, this profile will be applied at all nodes.
-        :param delta: The minimum distance between nodes, vertices and line segments for reliable computation of the
-                      separation between line segments and nodes.
+        :param extend_sides_by_eps: Whether to extend sides by eps for a clear overlap.
         """
-        SmoothPolygonMixin.__init__(self,
-                                    profile_factories=profile_factories,
-                                    delta=delta)
         Rectangle.__init__(self,
                            size=size,
                            width=width,
                            depth=depth,
-                           center=center)
+                           center=center,
+                           extend_sides_by_eps=extend_sides_by_eps)
+        SmoothPolygonMixin.__init__(self, profile_factories=profile_factories)
 
 # ----------------------------------------------------------------------------------------------------------------------
