@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "Super-SCAD-Polygon"
-version = "0.9.1"
+version = "0.9.2"
 description = "SuperSCAD widgets for polygons and smooth polygons."
 authors = ["P.R. Water <p.r.water@setbased.nl>"]
 license = "MIT"
