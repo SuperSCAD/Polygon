@@ -1,6 +1,9 @@
+from super_scad.boolean.Union import Union
 from super_scad.scad.Context import Context
 from super_scad.scad.Scad import Scad
+from super_scad.transformation.Paint import Paint
 from super_scad.type import Vector2
+from super_scad.type.Color import Color
 from super_scad_smooth_profile.RoughFactory import RoughFactory
 
 from super_scad_polygon.SmoothPolygon import SmoothPolygon
@@ -58,6 +61,30 @@ class PolygonTestCase(ScadTestCase):
         polygon = SmoothPolygon(points=points, profile_factories=FilletFactory(radius=1.0))
 
         scad.run_super_scad(polygon, path_actual)
+        actual = path_actual.read_text()
+        expected = path_expected.read_text()
+        self.assertEqual(expected, actual)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_smooth_polygon_and_extend(self):
+        """
+        Test for a smooth polygon with test profile.
+        """
+        path_actual, path_expected = self.paths()
+
+        scad = Scad(context=Context(fa=1.0, fs=0.1, eps=0.1))
+
+        points = [Vector2(0.0, 6.0), Vector2(10.0, 0.0), Vector2(-10.0, 0.0)]
+        polygon1 = SmoothPolygon(points=points,
+                                 profile_factories=FilletFactory(radius=1.0),
+                                 extend_sides_by_eps={1})
+        polygon2 = SmoothPolygon(points=points,
+                                 profile_factories=FilletFactory(radius=1.0))
+
+        polygons = Union(children=[Paint(color=Color('red'), child=polygon1),
+                                   polygon2])
+
+        scad.run_super_scad(polygons, path_actual)
         actual = path_actual.read_text()
         expected = path_expected.read_text()
         self.assertEqual(expected, actual)

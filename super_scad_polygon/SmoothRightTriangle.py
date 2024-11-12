@@ -30,12 +30,12 @@ class SmoothRightTriangle(SmoothPolygonMixin, RightTriangle):
         :param delta: The minimum distance between nodes, vertices and line segments for reliable computation of the
                       separation between line segments and nodes.
         """
-        SmoothPolygonMixin.__init__(self,
-                                    profile_factories=profile_factories)
         RightTriangle.__init__(self,
                                width=width,
                                depth=depth,
                                extend_sides_by_eps=extend_sides_by_eps,
                                delta=delta)
+        SmoothPolygonMixin.__init__(self,
+                                    profile_factories=profile_factories)
 
 # ----------------------------------------------------------------------------------------------------------------------

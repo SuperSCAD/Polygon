@@ -25,9 +25,9 @@ class SmoothSquare(SmoothPolygonMixin, Square):
                                   profile factory is given, this profile will be applied at all nodes.
         :param extend_sides_by_eps: Whether to extend sides by eps for a clear overlap.
         """
-        SmoothPolygonMixin.__init__(self, profile_factories=profile_factories)
         Square.__init__(self,
                         size=size,
                         extend_sides_by_eps=extend_sides_by_eps)
+        SmoothPolygonMixin.__init__(self, profile_factories=profile_factories)
 
 # ----------------------------------------------------------------------------------------------------------------------

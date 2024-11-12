@@ -46,22 +46,6 @@ class Fillet(SmoothProfile):
         return self.uc(self._args['radius'])
 
     # ------------------------------------------------------------------------------------------------------------------
-    @property
-    def size1(self) -> float:
-        """
-        Returns the size of the profile on the first vertex at the node.
-        """
-        return self.radius
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @property
-    def size2(self) -> float:
-        """
-        Returns the size of the profile on the second vertex at the node.
-        """
-        return self.radius
-
-    # ------------------------------------------------------------------------------------------------------------------
     def build(self, context: Context) -> ScadWidget:
         """
         Builds a SuperSCAD widget.
@@ -101,16 +85,14 @@ class Fillet(SmoothProfile):
         :param context: The build context.
         :param alpha: The angle of the fillet.
         """
-        radius = self.radius
-
-        x = radius * math.cos(alpha)
-        y = radius * math.cos(alpha) ** 2 / math.sin(alpha)
+        x = self.radius * math.cos(alpha)
+        y = self.radius * math.cos(alpha) ** 2 / math.sin(alpha)
         polygon = Polygon(points=[Vector2.origin, Vector2(x, -y), Vector2(-x, -y)],
                           extend_sides_by_eps={0, 2},
                           convexity=2)
-        circle = Circle(radius=radius, fn4n=True)
+        circle = Circle(radius=self.radius, fn4n=True)
         fillet = Difference(children=[polygon,
-                                      Translate2D(vector=Vector2(0.0, -radius / math.sin(alpha)),
+                                      Translate2D(vector=Vector2(0.0, -self.radius / math.sin(alpha)),
                                                   child=circle)])
 
         return Position2D(angle=self.normal_angle + rotation,
@@ -122,11 +104,9 @@ class Fillet(SmoothProfile):
         """
         Builds a fillet.
         """
-        inner_angle = self.inner_angle
-
         return Translate2D(vector=self.position,
-                           child=CircleSector(start_angle=self.normal_angle + 0.5 * inner_angle,
-                                              end_angle=self.normal_angle - 0.5 * inner_angle,
+                           child=CircleSector(start_angle=self.normal_angle + 0.5 * self.inner_angle,
+                                              end_angle=self.normal_angle - 0.5 * self.inner_angle,
                                               radius=-self.radius,
                                               extend_legs_by_eps=True,
                                               fn4n=True))
