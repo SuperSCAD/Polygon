@@ -1,27 +1,25 @@
 from super_scad.scad.Context import Context
 from super_scad.scad.Scad import Scad
 
-from super_scad_polygon.SmoothRightTriangle import SmoothRightTriangle
+from super_scad_polygon.SmoothEquilateralTriangle import SmoothEquilateralTriangle
 from test.FilletFactory import FilletFactory
 from test.ScadTestCase import ScadTestCase
 
 
-class SmoothRightTriangleTest(ScadTestCase):
+class SmoothEquilateralTriangleTest(ScadTestCase):
     """
-    Tests cases for SmoothRightTriangle.
+    Tests cases for SmoothEquilateralTriangle.
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_plain_smooth_right_triangle(self) -> None:
+    def test_plain_smooth_equilateral_triangle(self) -> None:
         """
-        Tests plain smooth right triangle.
+        Tests plain smooth equilateral triangle.
         """
-
         scad = Scad(context=Context(fa=1.0, fs=0.1, eps=0.1))
-        triangle = SmoothRightTriangle(width=20.0,
-                                       depth=10.0,
-                                       profile_factories=FilletFactory(radius=1.0),
-                                       extend_sides_by_eps={0})
+        triangle = SmoothEquilateralTriangle(side_length=10.0,
+                                             profile_factories=FilletFactory(radius=1.0),
+                                             extend_sides_by_eps={2})
 
         path_actual, path_expected = self.paths()
         scad.run_super_scad(triangle, path_actual)

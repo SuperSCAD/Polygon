@@ -18,16 +18,17 @@ class SmoothPolygonMixin(ABC):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self,
-                 *,
-                 profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None):
+    def __init__(self, *, profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None):
         """
         Object constructor.
 
         :param profile_factories: The profile factories to be applied at nodes of the polygon. When a single profile
                                   factory is given, this profile will be applied at all nodes.
         """
-        self._args['profile_factories'] = profile_factories
+        self._profile_factories = profile_factories
+        """
+        The profile factories to be applied at nodes of the polygon.
+        """
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -35,26 +36,21 @@ class SmoothPolygonMixin(ABC):
         """
         Returns the list of smooth profile factories.
         """
-        profile_factories = self._args.get('profile_factories')
+        if isinstance(self._profile_factories, SmoothProfileFactory):
+            self._profile_factories = [self._profile_factories for _ in range(self.sides)]
 
-        if isinstance(profile_factories, SmoothProfileFactory):
-            profile_factories = [profile_factories for _ in range(self.sides)]
+        elif isinstance(self._profile_factories, List):
+            if len(self._profile_factories) < self.sides:
+                self._profile_factories += [RoughFactory() for _ in range(len(self._profile_factories), self.sides)]
 
-        elif isinstance(profile_factories, List):
-            if len(profile_factories) < self.sides:
-                profile_factories = profile_factories + [RoughFactory() for _ in
-                                                         range(len(profile_factories), self.sides)]
-
-        elif profile_factories is None:
-            profile_factories = [RoughFactory() for _ in range(self.sides)]
+        elif self._profile_factories is None:
+            self._profile_factories = [RoughFactory() for _ in range(self.sides)]
 
         else:
             raise ValueError(f'Parameter profile_factories SmoothProfileFactory, '
-                             f', a list of SmoothProfileFactory or None, got {type(profile_factories)}')
+                             f', a list of SmoothProfileFactory or None, got {type(self._profile_factories)}')
 
-        self._args['profile_factories'] = profile_factories
-
-        return profile_factories
+        return self._profile_factories
 
     # ------------------------------------------------------------------------------------------------------------------
     def build(self, context: Context) -> ScadWidget:
