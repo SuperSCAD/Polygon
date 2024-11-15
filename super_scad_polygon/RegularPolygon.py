@@ -25,21 +25,20 @@ class RegularPolygon(ScadWidget, PolygonMixin):
                  inner_radius: float | None = None,
                  inner_diameter: float | None = None,
                  side_length: float | None = None,
-                 extend_sides_by_eps: bool | List[bool] | Set[int] | None = None,
-                 delta: float | None = None):
+                 extend_sides_by_eps: bool | List[bool] | Set[int] | None = None):
         """
         Object constructor.
 
         :param sides: The number of sides of the regular polygon.
         :param outer_radius: The outer radius (a.k.a. circumradius) of the regular polygon.
+        :param outer_diameter: The outer diameter of the regular polygon.
         :param inner_radius: The inner radius (a.k.a. apothem) of the regular polygon.
+        :param inner_diameter: The inner diameter of the regular polygon.
         :param side_length: The length of a side of the regular polygon.
         :param extend_sides_by_eps: Whether to extend sides by eps for a clear overlap.
-        :param delta: The minimum distance between nodes, vertices and line segments for reliable computation of the
-                      separation between line segments and nodes.
         """
         ScadWidget.__init__(self, args=locals())
-        PolygonMixin.__init__(self, extend_sides_by_eps=extend_sides_by_eps, delta=delta)
+        PolygonMixin.__init__(self, extend_sides_by_eps=extend_sides_by_eps)
 
         self._angles: List[float] = []
         """

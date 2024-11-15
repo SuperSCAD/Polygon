@@ -19,16 +19,19 @@ class SmoothRegularPolygon(SmoothPolygonMixin, RegularPolygon):
                  outer_diameter: float | None = None,
                  inner_radius: float | None = None,
                  inner_diameter: float | None = None,
-                 size: float | None = None,
+                 side_length: float | None = None,
                  profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = None,
-                 extend_sides_by_eps: bool | List[bool] | Set[int] | None = None,
-                 delta: float | None = None):
+                 extend_sides_by_eps: bool | List[bool] | Set[int] | None = None):
         """
         Object constructor.
 
+        :param sides: The number of sides of the regular polygon.
+        :param outer_radius: The outer radius (a.k.a. circumradius) of the regular polygon.
+        :param outer_diameter: The outer diameter of the regular polygon.
+        :param inner_radius: The inner radius (a.k.a. apothem) of the regular polygon.
+        :param inner_diameter: The inner diameter of the regular polygon.
+        :param side_length: The length of a side of the regular polygon.
         :param extend_sides_by_eps: Whether to extend sides by eps for a clear overlap.
-        :param delta: The minimum distance between nodes, vertices and line segments for reliable computation of the
-                      separation between line segments and nodes.
         """
         RegularPolygon.__init__(self,
                                 sides=sides,
@@ -36,9 +39,8 @@ class SmoothRegularPolygon(SmoothPolygonMixin, RegularPolygon):
                                 outer_diameter=outer_diameter,
                                 inner_radius=inner_radius,
                                 inner_diameter=inner_diameter,
-                                side_length=size,
-                                extend_sides_by_eps=extend_sides_by_eps,
-                                delta=delta)
+                                side_length=side_length,
+                                extend_sides_by_eps=extend_sides_by_eps)
         SmoothPolygonMixin.__init__(self, profile_factories=profile_factories)
 
 # ----------------------------------------------------------------------------------------------------------------------

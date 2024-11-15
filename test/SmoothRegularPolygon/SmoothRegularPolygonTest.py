@@ -24,7 +24,7 @@ class RegularPolygonTestCase(ScadTestCase):
 
         scad = Scad(context=Context(fa=1.0, fs=0.1))
         polygon = SmoothRegularPolygon(sides=7,
-                                       size=10.0,
+                                       side_length=10.0,
                                        profile_factories=FilletFactory(radius=1.0))
 
         scad.run_super_scad(polygon, path_actual)
