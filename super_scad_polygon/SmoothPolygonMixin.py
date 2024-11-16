@@ -7,6 +7,7 @@ from super_scad.scad.Context import Context
 from super_scad.scad.ScadWidget import ScadWidget
 from super_scad_smooth_profile.RoughFactory import RoughFactory
 from super_scad_smooth_profile.SmoothProfileFactory import SmoothProfileFactory
+from super_scad_smooth_profile.SmoothProfileParams import SmoothProfileParams
 
 from super_scad_polygon.helper.SmoothPolygonSideExtender import SmoothPolygonSideExtender
 
@@ -67,9 +68,9 @@ class SmoothPolygonMixin(ABC):
         profile_factories = self.profile_factories
         for index in range(len(nodes)):
             profile = profile_factories[index]
-            polygon = profile.create_smooth_profile(inner_angle=inner_angles[index],
-                                                    normal_angle=normal_angles[index],
-                                                    position=nodes[index],
+            polygon = profile.create_smooth_profile(params=SmoothProfileParams(inner_angle=inner_angles[index],
+                                                                               normal_angle=normal_angles[index],
+                                                                               position=nodes[index]),
                                                     child=polygon)
 
         return polygon
