@@ -2,7 +2,7 @@ from super_scad.scad.Context import Context
 from super_scad.scad.Scad import Scad
 
 from super_scad_polygon.SmoothTriangle import SmoothTriangle
-from test.FilletFactory import FilletFactory
+from test.Fillet import Fillet
 from test.ScadTestCase import ScadTestCase
 
 
@@ -20,7 +20,7 @@ class SmoothTriangleTest(ScadTestCase):
         triangle = SmoothTriangle(length_a=10.0,
                                   length_b=20.0,
                                   length_c=15.0,
-                                  profile_factories=FilletFactory(radius=1.0),
+                                  profiles=Fillet(radius=1.0),
                                   extend_sides_by_eps={2})
 
         path_actual, path_expected = self.paths()

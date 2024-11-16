@@ -35,7 +35,6 @@ class EquilateralTriangleTest(ScadTestCase):
         self.assertAlmostEqual((nodes[1] - nodes[2]).length, 5.0)
         self.assertAlmostEqual((nodes[2] - nodes[0]).length, 5.0)
 
-
         path_actual, path_expected = self.paths()
         scad.run_super_scad(triangle, path_actual)
         actual = path_actual.read_text()

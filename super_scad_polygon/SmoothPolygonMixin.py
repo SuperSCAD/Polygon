@@ -5,8 +5,8 @@ from super_scad.d2.helper.PolygonSideExtender import PolygonSideExtender
 from super_scad.d2.PolygonMixin import PolygonMixin
 from super_scad.scad.Context import Context
 from super_scad.scad.ScadWidget import ScadWidget
-from super_scad_smooth_profile.RoughFactory import RoughFactory
-from super_scad_smooth_profile.SmoothProfileFactory import SmoothProfileFactory
+from super_scad_smooth_profile.Rough import Rough
+from super_scad_smooth_profile.SmoothProfile import SmoothProfile
 from super_scad_smooth_profile.SmoothProfileParams import SmoothProfileParams
 
 from super_scad_polygon.helper.SmoothPolygonSideExtender import SmoothPolygonSideExtender
@@ -19,39 +19,39 @@ class SmoothPolygonMixin(ABC):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, *, profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None):
+    def __init__(self, *, profiles: SmoothProfile | List[SmoothProfile] | None):
         """
         Object constructor.
 
-        :param profile_factories: The profile factories to be applied at nodes of the polygon. When a single profile
-                                  factory is given, this profile will be applied at all nodes.
+        :param profiles: The profile to be applied at nodes of the polygon. When a single profile is given, this profile
+                         will be applied at all nodes.
         """
-        self._profile_factories = profile_factories
+        self._profiles = profiles
         """
-        The profile factories to be applied at nodes of the polygon.
+        The profile to be applied at nodes of the polygon.
         """
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def profile_factories(self) -> List[SmoothProfileFactory]:
+    def profiles(self) -> List[SmoothProfile]:
         """
-        Returns the list of smooth profile factories.
+        Returns the list of smoothing profiles.
         """
-        if isinstance(self._profile_factories, SmoothProfileFactory):
-            self._profile_factories = [self._profile_factories for _ in range(self.sides)]
+        if isinstance(self._profiles, SmoothProfile):
+            self._profiles = [self._profiles for _ in range(self.sides)]
 
-        elif isinstance(self._profile_factories, List):
-            if len(self._profile_factories) < self.sides:
-                self._profile_factories += [RoughFactory() for _ in range(len(self._profile_factories), self.sides)]
+        elif isinstance(self._profiles, List):
+            if len(self._profiles) < self.sides:
+                self._profiles += [Rough() for _ in range(len(self._profiles), self.sides)]
 
-        elif self._profile_factories is None:
-            self._profile_factories = [RoughFactory() for _ in range(self.sides)]
+        elif self._profiles is None:
+            self._profiles = [Rough() for _ in range(self.sides)]
 
         else:
-            raise ValueError(f'Parameter profile_factories SmoothProfileFactory, '
-                             f', a list of SmoothProfileFactory or None, got {type(self._profile_factories)}')
+            raise ValueError(f'Parameter profiles must be a SmoothProfile, '
+                             f', a list of SmoothProfile or None, got {type(self._profiles)}')
 
-        return self._profile_factories
+        return self._profiles
 
     # ------------------------------------------------------------------------------------------------------------------
     def build(self, context: Context) -> ScadWidget:
@@ -66,7 +66,7 @@ class SmoothPolygonMixin(ABC):
         inner_angles = self.inner_angles(context)
         normal_angles = self.normal_angles(context)
         extend_sides_by_eps = self.extend_sides_by_eps
-        profile_factories = self.profile_factories
+        profiles = self.profiles
         n = len(nodes)
         for index in range(n):
             extend_side_by_eps1 = (index - 1) % n in extend_sides_by_eps
@@ -77,7 +77,7 @@ class SmoothPolygonMixin(ABC):
                                          position=nodes[index],
                                          side1_is_extended_by_eps=extend_side_by_eps1,
                                          side2_is_extended_by_eps=extend_side_by_eps2)
-            polygon = profile_factories[index].create_smooth_profile(params=params, child=polygon)
+            polygon = profiles[index].create_smooth_profile(params=params, child=polygon)
 
         return polygon
 
@@ -86,6 +86,6 @@ class SmoothPolygonMixin(ABC):
         """
         Returns a polygon side extender that extends this polygon.
         """
-        return SmoothPolygonSideExtender(self.profile_factories)
+        return SmoothPolygonSideExtender(self.profiles)
 
 # ----------------------------------------------------------------------------------------------------------------------

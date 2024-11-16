@@ -3,7 +3,7 @@ from typing import List
 from super_scad.d2.helper.PolygonSideExtender import PolygonSideExtender
 from super_scad.scad.Context import Context
 from super_scad.type.Vector2 import Vector2
-from super_scad_smooth_profile.SmoothProfileFactory import SmoothProfileFactory
+from super_scad_smooth_profile.SmoothProfile import SmoothProfile
 
 
 class SmoothPolygonSideExtender(PolygonSideExtender):
@@ -12,22 +12,22 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, profile_factories: List[SmoothProfileFactory]):
+    def __init__(self, profile: List[SmoothProfile]):
         """
         Object constructor.
 
-        :param profile_factories: The smooth profile factories.
+        :param profile: The smooth profiles.
         """
         PolygonSideExtender.__init__(self)
 
-        self._profile_factories: List[SmoothProfileFactory] = profile_factories
+        self._profiles: List[SmoothProfile] = profile
         """
-        The list of smooth profile factories.
+        The list of smooth profiles.
         """
 
-        self._current_profile_factory: SmoothProfileFactory | None = None
+        self._current_profile: SmoothProfile | None = None
         """
-        The current profile factory for the current node of the polygon being processed.
+        The current profile for the current node of the polygon being processed.
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
         """
         PolygonSideExtender._set_currents(self)
 
-        self._current_profile_factory = self._profile_factories[self._index]
+        self._current_profile = self._profiles[self._index]
 
     # ------------------------------------------------------------------------------------------------------------------
     def _extend_outer_corner_side1(self, context: Context) -> None:
@@ -46,7 +46,7 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
 
         :param context: The build context.
         """
-        offset1 = self._current_profile_factory.offset1(inner_angle=self._current_inner_angle)
+        offset1 = self._current_profile.offset1(inner_angle=self._current_inner_angle)
         if offset1 == 0.0:
             PolygonSideExtender._extend_outer_corner_side1(self, context=context)
         else:
@@ -59,7 +59,7 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
 
         :param context: The build context.
         """
-        offset2 = self._current_profile_factory.offset2(inner_angle=self._current_inner_angle)
+        offset2 = self._current_profile.offset2(inner_angle=self._current_inner_angle)
         if offset2 == 0.0:
             PolygonSideExtender._extend_outer_corner_side2(self, context=context)
         else:
@@ -72,8 +72,8 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
 
         :param context: The build context.
         """
-        offset1 = self._current_profile_factory.offset1(inner_angle=self._current_inner_angle)
-        offset2 = self._current_profile_factory.offset2(inner_angle=self._current_inner_angle)
+        offset1 = self._current_profile.offset1(inner_angle=self._current_inner_angle)
+        offset2 = self._current_profile.offset2(inner_angle=self._current_inner_angle)
         if offset1 == 0.0 and offset2 == 0.0:
             PolygonSideExtender._extend_outer_corner_side1_and_side2(self, context)
         else:

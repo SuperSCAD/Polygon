@@ -60,7 +60,8 @@ class TriangleTest(ScadTestCase):
         Tests triangle from 2 lengths adn one angle_b.
         """
         scad = Scad(context=Context(eps=0.1))
-        triangle = Triangle(length_a=6.0, length_c=5.0, angle_b=math.degrees(math.acos(3.0 / 5.0)), extend_sides_by_eps={2})
+        triangle = Triangle(length_a=6.0, length_c=5.0, angle_b=math.degrees(math.acos(3.0 / 5.0)),
+                            extend_sides_by_eps={2})
 
         nodes = triangle.nodes
         self.assertAlmostEqual((nodes[2] - nodes[0]).length, 6.0)
@@ -82,7 +83,8 @@ class TriangleTest(ScadTestCase):
         Tests triangle from 2 lengths adn one angle_c.
         """
         scad = Scad(context=Context(eps=0.1))
-        triangle = Triangle(length_a=6.0, length_b=5.0, angle_c=math.degrees(math.acos(3.0 / 5.0)), extend_sides_by_eps={2})
+        triangle = Triangle(length_a=6.0, length_b=5.0, angle_c=math.degrees(math.acos(3.0 / 5.0)),
+                            extend_sides_by_eps={2})
 
         nodes = triangle.nodes
         self.assertAlmostEqual((nodes[2] - nodes[0]).length, 6.0)

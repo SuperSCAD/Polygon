@@ -1,7 +1,7 @@
 from typing import List, Set
 
 from super_scad.type.Vector2 import Vector2
-from super_scad_smooth_profile.SmoothProfileFactory import SmoothProfileFactory
+from super_scad_smooth_profile.SmoothProfile import SmoothProfile
 
 from super_scad_polygon.SmoothPolygonMixin import SmoothPolygonMixin
 from super_scad_polygon.Triangle import Triangle
@@ -23,7 +23,7 @@ class SmoothTriangle(SmoothPolygonMixin, Triangle):
                  angle_c: float | None = None,
                  nodes: List[Vector2] | None = None,
                  center: bool = False,
-                 profile_factories: SmoothProfileFactory | List[SmoothProfileFactory] | None = None,
+                 profiles: SmoothProfile | List[SmoothProfile] | None = None,
                  extend_sides_by_eps: bool | List[bool] | Set[int] | None = None):
         """
         Object constructor.
@@ -36,8 +36,8 @@ class SmoothTriangle(SmoothPolygonMixin, Triangle):
         :param angle_c: The angle opposite of the third side of the triangle.
         :param nodes: A nodes of the triangle (before centering).
         :param center: Whether the triangle must be centered with its point of mass at the origin.
-        :param profile_factories: The profile factories to be applied at nodes of the right triangle. When a single
-                                  profile factory is given, this profile will be applied at all nodes.
+        :param profiles: The profile to be applied at nodes of the right triangle. When a single profile is given, this
+                         profile will be applied at all nodes.
         :param extend_sides_by_eps: Whether to extend sides by eps for a clear overlap.
         """
         Triangle.__init__(self,
@@ -50,6 +50,6 @@ class SmoothTriangle(SmoothPolygonMixin, Triangle):
                           nodes=nodes,
                           center=center,
                           extend_sides_by_eps=extend_sides_by_eps)
-        SmoothPolygonMixin.__init__(self, profile_factories=profile_factories)
+        SmoothPolygonMixin.__init__(self, profiles=profiles)
 
 # ----------------------------------------------------------------------------------------------------------------------

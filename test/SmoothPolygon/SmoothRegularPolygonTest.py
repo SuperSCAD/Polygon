@@ -4,10 +4,10 @@ from super_scad.scad.Scad import Scad
 from super_scad.transformation.Paint import Paint
 from super_scad.type import Vector2
 from super_scad.type.Color import Color
-from super_scad_smooth_profile.RoughFactory import RoughFactory
+from super_scad_smooth_profile.Rough import Rough
 
 from super_scad_polygon.SmoothPolygon import SmoothPolygon
-from test.FilletFactory import FilletFactory
+from test.Fillet import Fillet
 from test.ScadTestCase import ScadTestCase
 
 
@@ -17,36 +17,36 @@ class PolygonTestCase(ScadTestCase):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_profile_factories(self):
+    def test_profiles(self):
         """
-        Test profile factories.
+        Test profiles.
         """
         points = [Vector2(-1.0, -1.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0), Vector2(1.0, -1.0)]
 
-        # Default factory is rough.
+        # Default profile is rough.
         polygon = SmoothPolygon(points=points)
-        profile_factories = polygon.profile_factories
-        self.assertEqual(4, len(profile_factories))
-        for index in range(len(profile_factories)):
-            profile_factory = profile_factories[index]
-            self.assertIsInstance(profile_factory, RoughFactory)
+        profiles = polygon.profiles
+        self.assertEqual(4, len(profiles))
+        for index in range(len(profiles)):
+            profile = profiles[index]
+            self.assertIsInstance(profile, Rough)
 
-        # One factory is repeated.
-        polygon = SmoothPolygon(points=points, profile_factories=FilletFactory(radius=1.0))
-        profile_factories = polygon.profile_factories
-        self.assertEqual(4, len(profile_factories))
-        for index in range(len(profile_factories)):
-            profile_factory = profile_factories[index]
-            self.assertIsInstance(profile_factory, FilletFactory)
+        # One profile is repeated.
+        polygon = SmoothPolygon(points=points, profiles=Fillet(radius=1.0))
+        profiles = polygon.profiles
+        self.assertEqual(4, len(profiles))
+        for index in range(len(profiles)):
+            profile = profiles[index]
+            self.assertIsInstance(profile, Fillet)
 
-        # List of factories is extended.
-        polygon = SmoothPolygon(points=points, profile_factories=[RoughFactory(), FilletFactory(radius=1.0)])
-        profile_factories = polygon.profile_factories
-        self.assertEqual(4, len(profile_factories))
-        self.assertIsInstance(profile_factories[0], RoughFactory)
-        self.assertIsInstance(profile_factories[1], FilletFactory)
-        for index in range(2, len(profile_factories)):
-            self.assertIsInstance(profile_factories[0], RoughFactory)
+        # List of profiles is extended.
+        polygon = SmoothPolygon(points=points, profiles=[Rough(), Fillet(radius=1.0)])
+        profiles = polygon.profiles
+        self.assertEqual(4, len(profiles))
+        self.assertIsInstance(profiles[0], Rough)
+        self.assertIsInstance(profiles[1], Fillet)
+        for index in range(2, len(profiles)):
+            self.assertIsInstance(profiles[0], Rough)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_plain_polygon(self):
@@ -58,7 +58,7 @@ class PolygonTestCase(ScadTestCase):
         scad = Scad(context=Context(fa=1.0, fs=0.1))
 
         points = [Vector2(0, 20.0), Vector2(10.0, 0.0), Vector2(0.0, 10.0), Vector2(-10.0, 0.0)]
-        polygon = SmoothPolygon(points=points, profile_factories=FilletFactory(radius=1.0))
+        polygon = SmoothPolygon(points=points, profiles=Fillet(radius=1.0))
 
         scad.run_super_scad(polygon, path_actual)
         actual = path_actual.read_text()
@@ -76,10 +76,10 @@ class PolygonTestCase(ScadTestCase):
 
         points = [Vector2(0.0, 6.0), Vector2(10.0, 0.0), Vector2(-10.0, 0.0)]
         polygon1 = SmoothPolygon(points=points,
-                                 profile_factories=FilletFactory(radius=1.0),
+                                 profiles=Fillet(radius=1.0),
                                  extend_sides_by_eps={1})
         polygon2 = SmoothPolygon(points=points,
-                                 profile_factories=FilletFactory(radius=1.0))
+                                 profiles=Fillet(radius=1.0))
 
         polygons = Union(children=[Paint(color=Color('red'), child=polygon1),
                                    polygon2])
