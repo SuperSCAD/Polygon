@@ -65,13 +65,19 @@ class SmoothPolygonMixin(ABC):
         nodes = self.nodes
         inner_angles = self.inner_angles(context)
         normal_angles = self.normal_angles(context)
+        extend_sides_by_eps = self.extend_sides_by_eps
         profile_factories = self.profile_factories
-        for index in range(len(nodes)):
-            profile = profile_factories[index]
-            polygon = profile.create_smooth_profile(params=SmoothProfileParams(inner_angle=inner_angles[index],
-                                                                               normal_angle=normal_angles[index],
-                                                                               position=nodes[index]),
-                                                    child=polygon)
+        n = len(nodes)
+        for index in range(n):
+            extend_side_by_eps1 = (index - 1) % n in extend_sides_by_eps
+            extend_side_by_eps2 = index in extend_sides_by_eps
+
+            params = SmoothProfileParams(inner_angle=inner_angles[index],
+                                         normal_angle=normal_angles[index],
+                                         position=nodes[index],
+                                         side1_is_extended_by_eps=extend_side_by_eps1,
+                                         side2_is_extended_by_eps=extend_side_by_eps2)
+            polygon = profile_factories[index].create_smooth_profile(params=params, child=polygon)
 
         return polygon
 
