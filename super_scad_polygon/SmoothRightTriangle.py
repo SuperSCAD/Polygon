@@ -1,6 +1,6 @@
 from typing import List, Set
 
-from super_scad_smooth_profile.SmoothProfile import SmoothProfile
+from super_scad_smooth_profile.SmoothProfile2D import SmoothProfile2D
 
 from super_scad_polygon.RightTriangle import RightTriangle
 from super_scad_polygon.SmoothPolygonMixin import SmoothPolygonMixin
@@ -17,7 +17,7 @@ class SmoothRightTriangle(SmoothPolygonMixin, RightTriangle):
                  width: float,
                  depth: float,
                  center: bool = False,
-                 profiles: SmoothProfile | List[SmoothProfile] | None = None,
+                 profiles: SmoothProfile2D | List[SmoothProfile2D] | None = None,
                  extend_sides_by_eps: bool | List[bool] | Set[int] | None = None):
         """
         Object constructor.

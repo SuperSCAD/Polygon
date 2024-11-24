@@ -3,7 +3,7 @@ from typing import List
 from super_scad.d2.helper.PolygonSideExtender import PolygonSideExtender
 from super_scad.scad.Context import Context
 from super_scad.type.Vector2 import Vector2
-from super_scad_smooth_profile.SmoothProfile import SmoothProfile
+from super_scad_smooth_profile.SmoothProfile2D import SmoothProfile2D
 
 
 class SmoothPolygonSideExtender(PolygonSideExtender):
@@ -12,7 +12,7 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, profile: List[SmoothProfile]):
+    def __init__(self, profile: List[SmoothProfile2D]):
         """
         Object constructor.
 
@@ -20,12 +20,12 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
         """
         PolygonSideExtender.__init__(self)
 
-        self._profiles: List[SmoothProfile] = profile
+        self._profiles: List[SmoothProfile2D] = profile
         """
         The list of smooth profiles.
         """
 
-        self._current_profile: SmoothProfile | None = None
+        self._current_profile: SmoothProfile2D | None = None
         """
         The current profile for the current node of the polygon being processed.
         """

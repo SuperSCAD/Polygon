@@ -1,12 +1,11 @@
 import math
-from typing import List, Set
+from typing import Any, Dict, List, Set
 
 from super_scad.d2.Polygon import Polygon
 from super_scad.d2.PolygonMixin import PolygonMixin
-from super_scad.scad.ArgumentAdmission import ArgumentAdmission
+from super_scad.scad.ArgumentValidator import ArgumentValidator
 from super_scad.scad.Context import Context
 from super_scad.scad.ScadWidget import ScadWidget
-from super_scad.scad.Unit import Unit
 from super_scad.type.Angle import Angle
 from super_scad.type.Vector2 import Vector2
 
@@ -37,8 +36,38 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         :param side_length: The length of a side of the regular polygon.
         :param extend_sides_by_eps: Whether to extend sides by eps for a clear overlap.
         """
-        ScadWidget.__init__(self, args=locals())
+        ScadWidget.__init__(self)
         PolygonMixin.__init__(self, extend_sides_by_eps=extend_sides_by_eps)
+
+        self._sides: int = sides
+        """
+        The number of sides of the regular polygon.
+        """
+
+        self._outer_radius: float | None = outer_radius
+        """
+        The outer radius of the regular polygon.
+        """
+
+        self._outer_diameter: float | None = outer_diameter
+        """
+        The outer diameter of the regular polygon.
+        """
+
+        self._inner_radius: float | None = inner_radius
+        """
+        The inner radius of the regular polygon.
+        """
+
+        self._inner_diameter: float | None = inner_diameter
+        """
+        The inner diameter of the regular polygon.
+        """
+
+        self._side_length: float | None = side_length
+        """
+        The length of a side of the regular polygon.
+        """
 
         self._angles: List[float] = []
         """
@@ -50,23 +79,23 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         The nodes of the regular polygon.
         """
 
-        self._unit: Unit | None = None
-        """
-        The unit in which self.__points are calculated.
-        """
+        self.__validate_arguments(locals())
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _validate_arguments(self) -> None:
+    @staticmethod
+    def __validate_arguments(args: Dict[str, Any]) -> None:
         """
         Validates the arguments supplied to the constructor of this SuperSCAD widget.
+
+        :param args: The arguments supplied to the constructor.
         """
-        admission = ArgumentAdmission(self._args)
-        admission.validate_exclusive({'side_length'},
+        validator = ArgumentValidator(args)
+        validator.validate_exclusive({'side_length'},
                                      {'outer_radius'},
                                      {'outer_diameter'},
                                      {'inner_radius'},
                                      {'inner_diameter'})
-        admission.validate_required({'sides'},
+        validator.validate_required({'sides'},
                                     {'side_length', 'outer_radius', 'outer_diameter', 'inner_radius', 'inner_diameter'})
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -74,7 +103,7 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         """
         Computes the nodes and the angles of the nodes of the regular polygon.
         """
-        if len(self._angles) > 0 and self._unit == Context.get_unit_length_current():
+        if len(self._angles) > 0:
             return
 
         self._unit = Context.get_unit_length_current()
@@ -101,7 +130,7 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         """
         Returns the number of sides of the polygon.
         """
-        return self._args['sides']
+        return self._sides
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -109,22 +138,23 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         """
         Returns the outer radius of the regular polygon.
         """
-        if 'outer_radius' in self._args:
-            return self.uc(self._args['outer_radius'])
+        if self._outer_radius is None:
+            if self._outer_diameter is not None:
+                self._outer_radius = 0.5 * self._outer_diameter
 
-        if 'outer_diameter' in self._args:
-            return self.uc(0.5 * self._args['outer_diameter'])
+            elif self._inner_radius is not None:
+                self._outer_radius = self._inner_radius / math.cos(math.pi / self.sides)
 
-        if 'inner_radius' in self._args:
-            return self.uc(self._args['inner_radius'] / math.cos(math.pi / self.sides))
+            elif self._inner_diameter is not None:
+                self._outer_radius = 0.5 * self._inner_diameter / math.cos(math.pi / self.sides)
 
-        if 'inner_diameter' in self._args:
-            return self.uc(0.5 * self._args['inner_diameter'] / math.cos(math.pi / self.sides))
+            elif self._side_length is not None:
+                self._outer_radius = self.side_length / (2.0 * math.sin(math.pi / self.sides))
 
-        if 'side_length' in self._args:
-            return self.uc(self._args['side_length'] / (2.0 * math.sin(math.pi / self.sides)))
+            else:
+                raise AssertionError('Should not be reached')
 
-        raise AssertionError('Should not be reached')
+        return self._outer_radius
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -132,22 +162,23 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         """
         Returns the outer diameter of the regular polygon.
         """
-        if 'outer_radius' in self._args:
-            return self.uc(2.0 * self._args['outer_radius'])
+        if self._outer_diameter is None:
+            if self._outer_radius is not None:
+                self._outer_diameter = 2.0 * self._outer_radius
 
-        if 'outer_diameter' in self._args:
-            return self.uc(self._args['outer_diameter'])
+            elif self._inner_radius is not None:
+                self._outer_diameter = 2.0 * self._inner_radius / math.cos(math.pi / self.sides)
 
-        if 'inner_radius' in self._args:
-            return self.uc(2.0 * self._args['inner_radius'] / math.cos(math.pi / self.sides))
+            elif self._inner_diameter is not None:
+                self._outer_diameter = self._inner_diameter / math.cos(math.pi / self.sides)
 
-        if 'inner_diameter' in self._args:
-            return self.uc(self._args['inner_diameter'] / math.cos(math.pi / self.sides))
+            elif self._side_length is not None:
+                self._outer_diameter = self._side_length / (math.sin(math.pi / self.sides))
 
-        if 'side_length' in self._args:
-            return self.uc(self._args['side_length'] / (math.sin(math.pi / self.sides)))
+            else:
+                raise AssertionError('Should not be reached')
 
-        raise AssertionError('Should not be reached')
+        return self._outer_diameter
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -155,22 +186,23 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         """
         Returns the inner radius of the regular polygon.
         """
-        if 'inner_radius' in self._args:
-            return self.uc(self._args['inner_radius'])
+        if self._inner_radius is None:
+            if self._inner_diameter is not None:
+                self._inner_radius = self._inner_diameter / 2.0
 
-        if 'inner_diameter' in self._args:
-            return self.uc(self._args['inner_diameter'] / 2.0)
+            elif self._outer_radius is not None:
+                self._inner_radius = self._outer_radius * math.cos(math.pi / self.sides)
 
-        if 'outer_radius' in self._args:
-            return self.uc(self._args['outer_radius'] * math.cos(math.pi / self.sides))
+            elif self._outer_diameter is not None:
+                self._inner_radius = 0.5 * self._outer_diameter * math.cos(math.pi / self.sides)
 
-        if 'outer_diameter' in self._args:
-            return self.uc(0.5 * self._args['outer_diameter'] * math.cos(math.pi / self.sides))
+            elif self._side_length is not None:
+                self._inner_radius = self._side_length / (2.0 * math.tan(math.pi / self.sides))
 
-        if 'side_length' in self._args:
-            return self.uc(self._args['side_length'] / (2.0 * math.tan(math.pi / self.sides)))
+            else:
+                raise AssertionError('Should not be reached')
 
-        raise AssertionError('Should not be reached')
+        return self._inner_radius
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -178,22 +210,23 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         """
         Returns the inner diameter of the regular polygon.
         """
-        if 'inner_radius' in self._args:
-            return self.uc(2.0 * self._args['inner_radius'])
+        if self._inner_diameter is None:
+            if self.inner_radius is not None:
+                self._inner_diameter = 2.0 * self._inner_radius
 
-        if 'inner_diameter' in self._args:
-            return self.uc(self._args['inner_diameter'])
+            elif self._outer_radius is not None:
+                self._inner_diameter = 2.0 * self._outer_radius * math.cos(math.pi / self.sides)
 
-        if 'outer_radius' in self._args:
-            return self.uc(2.0 * self._args['outer_radius'] * math.cos(math.pi / self.sides))
+            elif self._outer_diameter is not None:
+                self._inner_diameter = self._outer_diameter * math.cos(math.pi / self.sides)
 
-        if 'outer_diameter' in self._args:
-            return self.uc(self._args['outer_diameter'] * math.cos(math.pi / self.sides))
+            elif self._side_length is not None:
+                self._inner_diameter = self._side_length / (math.tan(math.pi / self.sides))
 
-        if 'side_length' in self._args:
-            return self.uc(self._args['side_length'] / (math.tan(math.pi / self.sides)))
+            else:
+                raise AssertionError('Should not be reached')
 
-        raise AssertionError('Should not be reached')
+        return self._inner_diameter
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -201,22 +234,23 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         """
         Returns the inner radius of the regular polygon.
         """
-        if 'inner_radius' in self._args:
-            return self.uc(2.0 * self._args['inner_radius'] * math.tan(math.pi / self.sides))
+        if self._side_length is None:
+            if self._inner_radius is not None:
+                self._side_length = 2.0 * self._inner_radius * math.tan(math.pi / self.sides)
 
-        if 'inner_diameter' in self._args:
-            return self.uc(self._args['inner_diameter'] * math.tan(math.pi / self.sides))
+            elif self._inner_diameter is not None:
+                self._side_length = self._inner_diameter * math.tan(math.pi / self.sides)
 
-        if 'outer_radius' in self._args:
-            return self.uc(2.0 * self._args['outer_radius'] * math.sin(math.pi / self.sides))
+            elif self._outer_radius is not None:
+                self._side_length = 2.0 * self._outer_radius * math.sin(math.pi / self.sides)
 
-        if 'outer_diameter' in self._args:
-            return self.uc(self._args['outer_diameter'] * math.sin(math.pi / self.sides))
+            elif self._outer_diameter is not None:
+                self._side_length = self._outer_diameter * math.sin(math.pi / self.sides)
 
-        if 'side_length' in self._args:
-            return self.uc(self._args['side_length'])
+            else:
+                raise AssertionError('Should not be reached')
 
-        raise AssertionError('Should not be reached')
+        return self._side_length
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -260,7 +294,7 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         """
         Returns the convexity of this polygon.
         """
-        return self._args.get('convexity')
+        return self._convexity
 
     # ------------------------------------------------------------------------------------------------------------------
     def build(self, context: Context) -> ScadWidget:

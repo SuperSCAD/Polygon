@@ -2,7 +2,7 @@ from typing import List, Set
 
 from super_scad.d2.Polygon import Polygon
 from super_scad.type import Vector2
-from super_scad_smooth_profile.SmoothProfile import SmoothProfile
+from super_scad_smooth_profile.SmoothProfile2D import SmoothProfile2D
 
 from super_scad_polygon.SmoothPolygonMixin import SmoothPolygonMixin
 
@@ -20,7 +20,7 @@ class SmoothPolygon(SmoothPolygonMixin, Polygon):
                  secondary: List[Vector2] | None = None,
                  secondaries: List[List[Vector2]] | None = None,
                  convexity: int | None = None,
-                 profiles: SmoothProfile | List[SmoothProfile] | None = None,
+                 profiles: SmoothProfile2D | List[SmoothProfile2D] | None = None,
                  extend_sides_by_eps: bool | List[bool] | Set[int] | None = None):
         """
         Object constructor.

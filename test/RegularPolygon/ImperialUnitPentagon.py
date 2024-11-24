@@ -15,7 +15,7 @@ class ImperialUnitPentagon(ScadWidget):
         """
         Object constructor.
         """
-        ScadWidget.__init__(self, args={})
+        ScadWidget.__init__(self)
 
         self.imperial_pentagon: RegularPolygon | None = None
         """

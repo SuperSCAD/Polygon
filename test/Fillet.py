@@ -1,14 +1,14 @@
 import math
+from typing import Tuple
 
-from super_scad.scad.ScadSingleChildParent import ScadSingleChildParent
 from super_scad.scad.ScadWidget import ScadWidget
-from super_scad_smooth_profile.SmoothProfile import SmoothProfile
+from super_scad_smooth_profile.SmoothProfile2D import SmoothProfile2D
 from super_scad_smooth_profile.SmoothProfileParams import SmoothProfileParams
 
 from test.FilletWidget import FilletWidget
 
 
-class Fillet(SmoothProfile):
+class Fillet(SmoothProfile2D):
     """
     A profile that produces fillet smoothing profile widgets.
     """
@@ -24,6 +24,30 @@ class Fillet(SmoothProfile):
         """
         The radius of the fillet.
         """
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @property
+    def is_external(self) -> bool:
+        """
+        Returns whether the fillet is an external fillet.
+        """
+        return False
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @property
+    def is_internal(self) -> bool:
+        """
+        Returns whether the fillet is an internal fillet.
+        """
+        return True
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @property
+    def convexity(self) -> int | None:
+        """
+        Return the convexity of the profile.
+        """
+        return 2
 
     # ------------------------------------------------------------------------------------------------------------------
     def offset1(self, *, inner_angle: float) -> float:
@@ -60,17 +84,23 @@ class Fillet(SmoothProfile):
         return self.offset1(inner_angle=inner_angle)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def create_smooth_profile(self, *, params: SmoothProfileParams, child: ScadWidget) -> ScadSingleChildParent:
+    def create_smooth_profiles(self, *, params: SmoothProfileParams) -> Tuple[ScadWidget | None, ScadWidget | None]:
         """
         Returns a smoothing profile widget creating a fillet.
 
         :param params: The parameters for the smooth profile widget.
-        :param child: The child object on which the smoothing must be applied.
         """
-        return FilletWidget(radius=self._radius,
-                            inner_angle=params.inner_angle,
-                            normal_angle=params.normal_angle,
-                            position=params.position,
-                            child=child)
+        if self._radius == 0.0 or self._radius > 0.0 and params.inner_angle == 180.0:
+            return None, None
+
+        widget = FilletWidget(radius=self._radius,
+                              inner_angle=params.inner_angle,
+                              normal_angle=params.normal_angle,
+                              position=params.position)
+
+        if self._radius > 0.0 and params.inner_angle < 180.0:
+            return widget, None
+
+        return None, widget
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -1,12 +1,14 @@
 from abc import ABC
 from typing import List
 
+from super_scad.boolean.Difference import Difference
+from super_scad.boolean.Union import Union
 from super_scad.d2.helper.PolygonSideExtender import PolygonSideExtender
 from super_scad.d2.PolygonMixin import PolygonMixin
 from super_scad.scad.Context import Context
 from super_scad.scad.ScadWidget import ScadWidget
 from super_scad_smooth_profile.Rough import Rough
-from super_scad_smooth_profile.SmoothProfile import SmoothProfile
+from super_scad_smooth_profile.SmoothProfile2D import SmoothProfile2D
 from super_scad_smooth_profile.SmoothProfileParams import SmoothProfileParams
 
 from super_scad_polygon.helper.SmoothPolygonSideExtender import SmoothPolygonSideExtender
@@ -19,7 +21,7 @@ class SmoothPolygonMixin(ABC):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, *, profiles: SmoothProfile | List[SmoothProfile] | None):
+    def __init__(self, *, profiles: SmoothProfile2D | List[SmoothProfile2D] | None):
         """
         Object constructor.
 
@@ -33,11 +35,11 @@ class SmoothPolygonMixin(ABC):
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def profiles(self) -> List[SmoothProfile]:
+    def profiles(self) -> List[SmoothProfile2D]:
         """
         Returns the list of smoothing profiles.
         """
-        if isinstance(self._profiles, SmoothProfile):
+        if isinstance(self._profiles, SmoothProfile2D):
             self._profiles = [self._profiles for _ in range(self.sides)]
 
         elif isinstance(self._profiles, List):
@@ -48,8 +50,8 @@ class SmoothPolygonMixin(ABC):
             self._profiles = [Rough() for _ in range(self.sides)]
 
         else:
-            raise ValueError(f'Parameter profiles must be a SmoothProfile, '
-                             f', a list of SmoothProfile or None, got {type(self._profiles)}')
+            raise ValueError(f'Parameter profiles must be a SmoothProfile2D, '
+                             f', a list of SmoothProfile2D or None, got {type(self._profiles)}')
 
         return self._profiles
 
@@ -61,6 +63,9 @@ class SmoothPolygonMixin(ABC):
         :param context: The build context.
         """
         polygon = PolygonMixin.build(self, context)
+
+        negatives = []
+        positives = []
 
         nodes = self.nodes
         inner_angles = self.inner_angles(context)
@@ -75,9 +80,16 @@ class SmoothPolygonMixin(ABC):
             params = SmoothProfileParams(inner_angle=inner_angles[index],
                                          normal_angle=normal_angles[index],
                                          position=nodes[index],
-                                         side1_is_extended_by_eps=extend_side_by_eps1,
-                                         side2_is_extended_by_eps=extend_side_by_eps2)
-            polygon = profiles[index].create_smooth_profile(params=params, child=polygon)
+                                         edge1_is_extended_by_eps=extend_side_by_eps1,
+                                         edge2_is_extended_by_eps=extend_side_by_eps2)
+            negative, positive = profiles[index].create_smooth_profiles(params=params)
+            if negative:
+                negatives.append(negative)
+            if positive:
+                positives.append(positive)
+
+        polygon = Difference(children=[polygon] + negatives)
+        polygon = Union(children=[polygon] + positives)
 
         return polygon
 
