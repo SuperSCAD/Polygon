@@ -19,7 +19,7 @@ class EquilateralTriangleTest(ScadTestCase):
         """
         context = Context(eps=0.1)
         scad = Scad(context=context)
-        triangle = EquilateralTriangle(side_length=5.0, extend_sides_by_eps={2})
+        triangle = EquilateralTriangle(side_length=5.0, extend_by_eps_sides={2})
 
         self.assertAlmostEqual(triangle.depth, 0.5 * math.sqrt(3.0) * 5.0)
         self.assertAlmostEqual(triangle.center_point.x, 2.5)

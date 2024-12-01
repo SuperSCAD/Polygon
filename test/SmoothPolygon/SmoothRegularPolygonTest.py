@@ -77,7 +77,7 @@ class PolygonTestCase(ScadTestCase):
         points = [Vector2(0.0, 6.0), Vector2(10.0, 0.0), Vector2(-10.0, 0.0)]
         polygon1 = SmoothPolygon(points=points,
                                  profiles=Fillet(radius=1.0),
-                                 extend_sides_by_eps={1})
+                                 extend_by_eps_sides={1})
         polygon2 = SmoothPolygon(points=points,
                                  profiles=Fillet(radius=1.0))
 

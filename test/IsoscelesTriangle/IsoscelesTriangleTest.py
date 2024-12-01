@@ -17,7 +17,7 @@ class IsoscelesTriangleTest(ScadTestCase):
         """
         context = Context(eps=0.1)
         scad = Scad(context=context)
-        triangle = IsoscelesTriangle(width=6.0, depth=4.0, extend_sides_by_eps={2})
+        triangle = IsoscelesTriangle(width=6.0, depth=4.0, extend_by_eps_sides={2})
 
         self.assertAlmostEqual(triangle.width, 6.0)
         self.assertAlmostEqual(triangle.depth, 4.0)

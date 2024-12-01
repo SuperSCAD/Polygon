@@ -24,7 +24,7 @@ class RegularPolygon(ScadWidget, PolygonMixin):
                  inner_radius: float | None = None,
                  inner_diameter: float | None = None,
                  side_length: float | None = None,
-                 extend_sides_by_eps: bool | List[bool] | Set[int] | None = None):
+                 extend_by_eps_sides: bool | List[bool] | Set[int] | None = None):
         """
         Object constructor.
 
@@ -34,10 +34,10 @@ class RegularPolygon(ScadWidget, PolygonMixin):
         :param inner_radius: The inner radius (a.k.a. apothem) of the regular polygon.
         :param inner_diameter: The inner diameter of the regular polygon.
         :param side_length: The length of a side of the regular polygon.
-        :param extend_sides_by_eps: Whether to extend sides by eps for a clear overlap.
+        :param extend_by_eps_sides: Whether to extend sides by eps for a clear overlap.
         """
         ScadWidget.__init__(self)
-        PolygonMixin.__init__(self, extend_sides_by_eps=extend_sides_by_eps)
+        PolygonMixin.__init__(self, extend_by_eps_sides=extend_by_eps_sides)
 
         self._sides: int = sides
         """

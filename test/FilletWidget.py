@@ -99,7 +99,7 @@ class FilletWidget(ScadWidget):
         x = self.radius * math.cos(alpha)
         y = self.radius * math.cos(alpha) ** 2 / math.sin(alpha)
         polygon = Polygon(points=[Vector2.origin, Vector2(x, -y), Vector2(-x, -y)],
-                          extend_sides_by_eps={0, 2},
+                          extend_by_eps_sides={0, 2},
                           convexity=2)
         circle = Circle(radius=self.radius, fn4n=True)
         fillet = Difference(children=[polygon,

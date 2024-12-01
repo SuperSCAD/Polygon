@@ -70,12 +70,12 @@ class SmoothPolygonMixin(ABC):
         nodes = self.nodes
         inner_angles = self.inner_angles(context)
         normal_angles = self.normal_angles(context)
-        extend_sides_by_eps = self.extend_sides_by_eps
+        extend_by_eps_sides = self.extend_by_eps_sides
         profiles = self.profiles
         n = len(nodes)
         for index in range(n):
-            extend_side_by_eps1 = (index - 1) % n in extend_sides_by_eps
-            extend_side_by_eps2 = index in extend_sides_by_eps
+            extend_side_by_eps1 = (index - 1) % n in extend_by_eps_sides
+            extend_side_by_eps2 = index in extend_by_eps_sides
 
             params = SmoothProfileParams(inner_angle=inner_angles[index],
                                          normal_angle=normal_angles[index],

@@ -46,7 +46,7 @@ class RegularPolygonTestCase(ScadTestCase):
                                                   Rough(),
                                                   Fillet(radius=1.0),
                                                   Fillet(radius=1.0)],
-                                        extend_sides_by_eps=True)
+                                        extend_by_eps_sides=True)
         hexagon2 = SmoothRegularPolygon(sides=6,
                                         outer_diameter=10.0,
                                         profiles=[Fillet(radius=1.0),

@@ -19,7 +19,7 @@ class SmoothEquilateralTriangleTest(ScadTestCase):
         scad = Scad(context=Context(fa=1.0, fs=0.1, eps=0.1))
         triangle = SmoothEquilateralTriangle(side_length=10.0,
                                              profiles=Fillet(radius=1.0),
-                                             extend_sides_by_eps={2})
+                                             extend_by_eps_sides={2})
 
         path_actual, path_expected = self.paths()
         scad.run_super_scad(triangle, path_actual)

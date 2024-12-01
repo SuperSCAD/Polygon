@@ -21,7 +21,7 @@ class SmoothTriangleTest(ScadTestCase):
                                   length_b=20.0,
                                   length_c=15.0,
                                   profiles=Fillet(radius=1.0),
-                                  extend_sides_by_eps={2})
+                                  extend_by_eps_sides={2})
 
         path_actual, path_expected = self.paths()
         scad.run_super_scad(triangle, path_actual)

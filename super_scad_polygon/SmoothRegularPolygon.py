@@ -21,7 +21,7 @@ class SmoothRegularPolygon(SmoothPolygonMixin, RegularPolygon):
                  inner_diameter: float | None = None,
                  side_length: float | None = None,
                  profiles: SmoothProfile2D | List[SmoothProfile2D] | None = None,
-                 extend_sides_by_eps: bool | List[bool] | Set[int] | None = None):
+                 extend_by_eps_sides: bool | List[bool] | Set[int] | None = None):
         """
         Object constructor.
 
@@ -33,7 +33,7 @@ class SmoothRegularPolygon(SmoothPolygonMixin, RegularPolygon):
         :param side_length: The length of a side of the regular polygon.
         :param profiles: The profile to be applied at nodes of the regular polygon. When a single profile is given, this
                          profile will be applied at all nodes.
-        :param extend_sides_by_eps: Whether to extend sides by eps for a clear overlap.
+        :param extend_by_eps_sides: Whether to extend sides by eps for a clear overlap.
         """
         RegularPolygon.__init__(self,
                                 sides=sides,
@@ -42,7 +42,7 @@ class SmoothRegularPolygon(SmoothPolygonMixin, RegularPolygon):
                                 inner_radius=inner_radius,
                                 inner_diameter=inner_diameter,
                                 side_length=side_length,
-                                extend_sides_by_eps=extend_sides_by_eps)
+                                extend_by_eps_sides=extend_by_eps_sides)
         SmoothPolygonMixin.__init__(self, profiles=profiles)
 
 # ----------------------------------------------------------------------------------------------------------------------
