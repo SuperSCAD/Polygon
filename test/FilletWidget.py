@@ -10,7 +10,7 @@ from super_scad.transformation.Position2D import Position2D
 from super_scad.transformation.Translate2D import Translate2D
 from super_scad.type import Vector2
 from super_scad.type.Angle import Angle
-from super_scad_circle_sector.CircleSector import CircleSector
+from super_scad_circle_plus.CircleSector import CircleSector
 
 
 class FilletWidget(ScadWidget):
@@ -119,7 +119,7 @@ class FilletWidget(ScadWidget):
                            child=CircleSector(start_angle=self._normal_angle + 0.5 * self._inner_angle,
                                               end_angle=self._normal_angle - 0.5 * self._inner_angle,
                                               radius=-self.radius,
-                                              extend_legs_by_eps=True,
+                                              extend_by_eps_legs=True,
                                               fn4n=True))
 
 # ----------------------------------------------------------------------------------------------------------------------

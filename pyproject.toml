@@ -27,8 +27,8 @@ super-scad-smooth-profile = "^0.6.2"
 
 [tool.poetry.group.dev.dependencies]
 coverage = "^7.6.7"
-super-scad-circle-sector = "^0.9.8"
-super-scad-smooth-profiles = "^0.6.1"
+super-scad-circle-plus = "^0.9.9"
+super-scad-smooth-profiles = "^0.6.2"
 
 [build-system]
 requires = ["poetry-core"]
