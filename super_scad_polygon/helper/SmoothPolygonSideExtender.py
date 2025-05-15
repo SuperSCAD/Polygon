@@ -101,8 +101,8 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
             angle1 = self._current_normal_angle + 0.5 * self._current_inner_angle + 90.0
             angle2 = angle1 - 90.0
 
-        node1 = self._current_node + Vector2.from_polar_coordinates(offset1, angle2)
-        node2 = node1 + Vector2.from_polar_coordinates(context.eps, angle1)
+        node1 = self._current_node + Vector2.from_polar(offset1, angle2)
+        node2 = node1 + Vector2.from_polar(context.eps, angle1)
 
         self._new_nodes.append(node2)
         self._new_nodes.append(node1)
@@ -123,8 +123,8 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
             angle1 = self._current_normal_angle - 0.5 * self._current_inner_angle - 90.0
             angle2 = angle1 + 90.0
 
-        node1 = self._current_node + Vector2.from_polar_coordinates(offset2, angle2)
-        node2 = node1 + Vector2.from_polar_coordinates(context.eps, angle1)
+        node1 = self._current_node + Vector2.from_polar(offset2, angle2)
+        node2 = node1 + Vector2.from_polar(context.eps, angle1)
         self._new_nodes.append(self._current_node)
 
         self._new_nodes.append(self._current_node)
