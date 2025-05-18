@@ -1,12 +1,11 @@
 from abc import ABC
 from typing import List
 
-from super_scad.boolean.Difference import Difference
-from super_scad.boolean.Union import Union
 from super_scad.d2.helper.PolygonSideExtender import PolygonSideExtender
 from super_scad.d2.PolygonMixin import PolygonMixin
 from super_scad.scad.Context import Context
 from super_scad.scad.ScadWidget import ScadWidget
+from super_scad.util.YinYang import YinYang
 from super_scad_smooth_profile.Rough import Rough
 from super_scad_smooth_profile.SmoothProfile2D import SmoothProfile2D
 from super_scad_smooth_profile.SmoothProfileParams import SmoothProfileParams
@@ -63,9 +62,7 @@ class SmoothPolygonMixin(ABC):
         :param context: The build context.
         """
         polygon = PolygonMixin.build(self, context)
-
-        negatives = []
-        positives = []
+        yin_yang = YinYang()
 
         nodes = self.nodes
         inner_angles = self.inner_angles(context)
@@ -82,16 +79,9 @@ class SmoothPolygonMixin(ABC):
                                          position=nodes[index],
                                          edge1_is_extended_by_eps=extend_side_by_eps1,
                                          edge2_is_extended_by_eps=extend_side_by_eps2)
-            negative, positive = profiles[index].create_smooth_profiles(params=params)
-            if negative:
-                negatives.append(negative)
-            if positive:
-                positives.append(positive)
+            yin_yang += profiles[index].create_smooth_profiles(params=params)
 
-        polygon = Difference(children=[polygon] + negatives)
-        polygon = Union(children=[polygon] + positives)
-
-        return polygon
+        return yin_yang.apply_negatives_positives(polygon)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _create_polygon_side_extender(self) -> PolygonSideExtender:
