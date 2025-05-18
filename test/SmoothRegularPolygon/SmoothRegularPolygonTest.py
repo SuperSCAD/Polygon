@@ -4,9 +4,9 @@ from super_scad.scad.Scad import Scad
 from super_scad.transformation.Paint import Paint
 from super_scad.type.Color import Color
 from super_scad_smooth_profile.Rough import Rough
+from super_scad_smooth_profiles.Fillet import Fillet
 
 from super_scad_polygon.SmoothRegularPolygon import SmoothRegularPolygon
-from test.Fillet import Fillet
 from test.ScadTestCase import ScadTestCase
 
 
@@ -23,6 +23,7 @@ class RegularPolygonTestCase(ScadTestCase):
         path_actual, path_expected = self.paths()
 
         scad = Scad(context=Context(fa=1.0, fs=0.1))
+        from super_scad_smooth_profiles.Fillet import Fillet
         polygon = SmoothRegularPolygon(sides=7,
                                        side_length=10.0,
                                        profiles=Fillet(radius=1.0))

@@ -5,9 +5,9 @@ from super_scad.transformation.Paint import Paint
 from super_scad.type import Vector2
 from super_scad.type.Color import Color
 from super_scad_smooth_profile.Rough import Rough
+from super_scad_smooth_profiles.Fillet import Fillet
 
 from super_scad_polygon.SmoothPolygon import SmoothPolygon
-from test.Fillet import Fillet
 from test.ScadTestCase import ScadTestCase
 
 

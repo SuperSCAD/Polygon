@@ -1,8 +1,8 @@
 from super_scad.scad.Context import Context
 from super_scad.scad.Scad import Scad
+from super_scad_smooth_profiles.Fillet import Fillet
 
 from super_scad_polygon.SmoothEquilateralTriangle import SmoothEquilateralTriangle
-from test.Fillet import Fillet
 from test.ScadTestCase import ScadTestCase
 
 
