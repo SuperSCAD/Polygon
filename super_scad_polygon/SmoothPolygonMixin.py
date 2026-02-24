@@ -71,14 +71,14 @@ class SmoothPolygonMixin(ABC):
         profiles = self.profiles
         n = len(nodes)
         for index in range(n):
-            extend_side_by_eps1 = (index - 1) % n in extend_by_eps_sides
-            extend_side_by_eps2 = index in extend_by_eps_sides
+            preceding_edge_is_extended_by_eps = (index - 1) % n in extend_by_eps_sides
+            succeeding_edge_is_extended_by_eps = index in extend_by_eps_sides
 
             params = SmoothProfileParams(inner_angle=inner_angles[index],
                                          normal_angle=normal_angles[index],
                                          position=nodes[index],
-                                         edge1_is_extended_by_eps=extend_side_by_eps1,
-                                         edge2_is_extended_by_eps=extend_side_by_eps2)
+                                         preceding_edge_is_extended_by_eps=preceding_edge_is_extended_by_eps,
+                                         succeeding_edge_is_extended_by_eps=succeeding_edge_is_extended_by_eps)
             yin_yang += profiles[index].create_smooth_profiles(params=params)
 
         return yin_yang.apply_negatives_positives(polygon)

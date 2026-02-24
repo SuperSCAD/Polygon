@@ -42,15 +42,15 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
     # ------------------------------------------------------------------------------------------------------------------
     def _extend_outer_corner_side1(self, context: Context) -> None:
         """
-        Handles the case were at an outer corner the first side is extended only.
+        Handles the case were at an outer corner the first side must be extended only.
 
         :param context: The build context.
         """
-        offset1 = self._current_profile.offset1(inner_angle=self._current_inner_angle)
-        if offset1 == 0.0:
+        offset_preceding_edge = self._current_profile.offset_preceding_edge(inner_angle=self._current_inner_angle)
+        if offset_preceding_edge == 0.0:
             PolygonSideExtender._extend_outer_corner_side1(self, context=context)
         else:
-            self._extend_offset1_positive(context, offset1)
+            self._extend_offset1_positive(context, offset_preceding_edge)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _extend_outer_corner_side2(self, context: Context) -> None:
@@ -59,11 +59,11 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
 
         :param context: The build context.
         """
-        offset2 = self._current_profile.offset2(inner_angle=self._current_inner_angle)
-        if offset2 == 0.0:
+        offset_succeeding_edge = self._current_profile.offset_succeeding_edge(inner_angle=self._current_inner_angle)
+        if offset_succeeding_edge == 0.0:
             PolygonSideExtender._extend_outer_corner_side2(self, context=context)
         else:
-            self._extend_offset2_positive(context, offset2)
+            self._extend_offset2_positive(context, offset_succeeding_edge)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _extend_outer_corner_side1_and_side2(self, context: Context) -> None:
@@ -72,19 +72,19 @@ class SmoothPolygonSideExtender(PolygonSideExtender):
 
         :param context: The build context.
         """
-        offset1 = self._current_profile.offset1(inner_angle=self._current_inner_angle)
-        offset2 = self._current_profile.offset2(inner_angle=self._current_inner_angle)
-        if offset1 == 0.0 and offset2 == 0.0:
+        offset_preceding_edge = self._current_profile.offset_preceding_edge(inner_angle=self._current_inner_angle)
+        offset_succeeding_edge = self._current_profile.offset_succeeding_edge(inner_angle=self._current_inner_angle)
+        if offset_preceding_edge == 0.0 and offset_succeeding_edge == 0.0:
             PolygonSideExtender._extend_outer_corner_side1_and_side2(self, context)
         else:
-            if offset1 == 0.0:
+            if offset_preceding_edge == 0.0:
                 self._new_nodes.append(self._current_node)
             else:
-                self._extend_offset1_positive(context, offset1)
-            if offset2 == 0.0:
+                self._extend_offset1_positive(context, offset_preceding_edge)
+            if offset_succeeding_edge == 0.0:
                 self._new_nodes.append(self._current_node)
             else:
-                self._extend_offset2_positive(context, offset2)
+                self._extend_offset2_positive(context, offset_succeeding_edge)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _extend_offset1_positive(self, context: Context, offset1: float) -> None:
